@@ -1,0 +1,26 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  labels:
+    app: ticker
+  name: ticker
+spec:
+  selector:
+    matchLabels:
+      app: ticker
+  template:
+    metadata:
+      annotations:
+        sidecar.istio.io/inject: "true"
+        traffic.sidecar.istio.io/includeOutboundIPRanges: '*'
+      labels:
+        app: ticker
+    spec:
+      containers:
+      - image: gcr.io/cf-sandbox-dsyer/ticker
+        imagePullPolicy: Always
+        name: user-container
+        ports:
+        - containerPort: 8080
+          name: user-port
+          protocol: TCP
